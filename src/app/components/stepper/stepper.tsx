@@ -54,7 +54,7 @@ const MyStepper = () => {
   };
 
   const handleDelete = () => {
-    let del = confirm("Are you sure you want to delete your data?");
+    const del = confirm("Are you sure you want to delete your data?");
     if (del) {
       localStorage.removeItem("userObject");
       setStep(0);
@@ -153,7 +153,7 @@ const MyStepper = () => {
     console.log(formData);
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     localStorage.setItem("userObject", JSON.stringify(formData));
     console.log("Form Submitted", formData);
