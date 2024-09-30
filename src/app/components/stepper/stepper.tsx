@@ -4,7 +4,6 @@ import { Stepper, Step } from "react-form-stepper";
 import Personal from "../stepperPages/personal/personal";
 import Company from "../stepperPages/company/company";
 import Education from "../stepperPages/education/education";
-import ButtonsArea from "../buttonsArea/buttonsArea";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import Experience from "../stepperPages/experience/experience";
 import Skills from "../stepperPages/skills/skills";
