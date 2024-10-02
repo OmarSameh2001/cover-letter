@@ -26,7 +26,6 @@ function Experience ({ handleChange, formData, experienceIndex }: ExperienceProp
           name={`experience-${experienceIndex}-company`}
           value={experience.company}
           onChange={handleChange}
-          required
         />
       </label>
       <br />
@@ -42,7 +41,7 @@ function Experience ({ handleChange, formData, experienceIndex }: ExperienceProp
       </label>
       <br />
       <label>
-        Role:
+        Responsibility or Achievments:
         <Input
           type="text"
           name={`experience-${experienceIndex}-role`}
@@ -53,11 +52,11 @@ function Experience ({ handleChange, formData, experienceIndex }: ExperienceProp
       </label>
       <br />
       <label>
-        Skills (comma separated):
+        Skills learnt (comma separated):
         <Input
           type="text"
           name={`experience-${experienceIndex}-skills`}
-          value={experience.skills.join(", ")}
+          value={experience.skills.join("")}
           onChange={handleChange}
           placeholder="e.g., Leadership, Communication"
         />

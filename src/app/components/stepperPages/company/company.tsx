@@ -20,7 +20,7 @@ function Company ({ handleChange, formData }: CompanyProps) {
         Company Name:
         <Input
           type="text"
-          name="name"
+          name="cname"
           value={formData.company.name}
           onChange={handleChange}
           required
