@@ -8,6 +8,7 @@ interface PersonalProps {
       name: string;
       email: string;
       phone: string;
+      yoe: string;
     };
   };
 }
@@ -15,6 +16,7 @@ interface PersonalProps {
 function Personal({ handleChange, formData }: PersonalProps) {
   return (
     <div>
+      <h3 style={{ textAlign: "center" }}>Personal Info.</h3>
       <label>
         Name:
         <Input
@@ -43,6 +45,16 @@ function Personal({ handleChange, formData }: PersonalProps) {
           type="tel"
           name="phone"
           value={formData.personal.phone}
+          onChange={handleChange}
+          required
+        />
+      </label>
+      <label>
+        Years of Experience:
+        <Input
+          type="number"
+          name="yoe"
+          value={formData.personal.yoe}
           onChange={handleChange}
           required
         />

@@ -19,6 +19,7 @@ function Experience ({ handleChange, formData, experienceIndex }: ExperienceProp
 
   return (
     <div>
+      <h3 style={{ textAlign: "center" }}>Experience</h3>
       <label>
         Company:
         <Input
@@ -51,7 +52,7 @@ function Experience ({ handleChange, formData, experienceIndex }: ExperienceProp
         />
       </label>
       <br />
-      <label>
+      {/* <label>
         Skills learnt (comma separated):
         <Input
           type="text"
@@ -60,7 +61,7 @@ function Experience ({ handleChange, formData, experienceIndex }: ExperienceProp
           onChange={handleChange}
           placeholder="e.g., Leadership, Communication"
         />
-      </label>
+      </label> */}
     </div>
   );
 };

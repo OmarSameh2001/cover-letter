@@ -1,29 +1,23 @@
-import Input from "@/app/addons/input/input";
-import React, { ChangeEventHandler } from "react";
+import React from "react";
+import CustomFieldArray from "@/app/addons/fieldArray/fieldArray";
 
 interface SkillsProps {
-  handleChange: ChangeEventHandler<HTMLInputElement>;
   formData: {
     skills: string[];
   };
+  handleChange: (updatedSkills: string[]) => void;
 }
 
-function Skills ({ handleChange, formData }: SkillsProps) {
+function Skills({ formData, handleChange }: SkillsProps) {
   return (
-    <div>
-      <label>
-        Skills:
-        <Input
-          type="text"
-          name="skills"
-          value={formData.skills.join(", ")}
-          onChange={handleChange}
-          placeholder="e.g., JavaScript, React, Node.js"
-          required
-        />
-      </label>
-    </div>
+    <>
+      <CustomFieldArray
+        item={{ key: "skills", title: "Skills" }}
+        values={formData.skills}
+        handleChange={handleChange} // Passing handleChange to notify MyStepper of changes
+      />
+    </>
   );
-};
+}
 
 export default Skills;

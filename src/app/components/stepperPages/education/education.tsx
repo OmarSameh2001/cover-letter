@@ -14,7 +14,8 @@ interface EducationProps {
 
 function Education ({ handleChange, formData }: EducationProps) {
   return (
-    <div style={{ width: "100%" }}>
+    <div>
+      <h3 style={{ textAlign: "center" }}>Education</h3>
       <label>
         University:
         <Input

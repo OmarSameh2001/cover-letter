@@ -1,92 +1,62 @@
-import { FieldArray, FieldArrayRenderProps } from "formik";
-import { Stack, TextField, Button, Grid, InputLabel } from "@mui/material";
-import { DeleteOutlined, AddOutlined } from "@mui/icons-material";
-import React, { useState } from "react";
+"use client";
+import { DeleteOutlined } from "@ant-design/icons";
+import { AddOutlined } from "@mui/icons-material";
+import { TextField } from "@mui/material";
+import React, { useEffect, useState } from "react";
 
-interface FieldArrayProps {
-  item: {
-    key: string; // in db or handle change function
-    title: string; // in frontend
-  };
-  initialValue: any[]; // The initial array values that the component manages
+interface CustomFieldArrayProps {
+  item: { key: string; title: string };
+  values: string[];
+  handleChange: (skills: string[]) => void; // Define the type for handleChange
 }
 
-const CustomFieldArray: React.FC<FieldArrayProps> = ({ item, initialValue }) => {
-  // Internal state to track the array values
-  const [currentValue, setCurrentValue] = useState(initialValue);
+const CustomFieldArray: React.FC<CustomFieldArrayProps> = ({
+  item,
+  values,
+  handleChange,
+}) => {
+  const [skills, setSkills] = useState<string[]>(values);
 
-  // Custom handleChange to update the specific input field
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number) => {
-    const updatedValues = [...currentValue];
-    updatedValues[index] = e.target.value; // Update the value at the given index
-    setCurrentValue(updatedValues); // Update the state with the modified array
-    console.log(updatedValues);
+  const handleAddField = () => {
+    setSkills([...skills, ""]); // Add an empty string for the new skill input
   };
 
-  // Handle adding a new field
-  const handleAdd = (push: (value: any) => void) => {
-    push(""); // Push an empty value to the Formik array
-    setCurrentValue([...currentValue, ""]); // Update the internal state by adding an empty string
+  const handleRemoveField = (index: number) => {
+    const newSkills = skills.filter((_, i) => i !== index);
+    setSkills(newSkills);
   };
 
-  // Handle removing a field
-  const handleRemove = (remove: (index: number) => void, index: number) => {
-    remove(index); // Remove the item from the Formik array
-    const updatedValues = currentValue.filter((_, i) => i !== index); // Filter out the removed value in the internal state
-    setCurrentValue(updatedValues); // Update the internal state
+  const handleFieldChange = (index: number, value: string) => {
+    const newSkills = skills.map((skill, i) => (i === index ? value : skill));
+    setSkills(newSkills);
   };
+
+  useEffect(() => {
+    handleChange(skills);
+  }, [skills]);
 
   return (
-    <FieldArray
-      name={item.key}
-      render={({ remove, push }: FieldArrayRenderProps) => (
-        <>
-          {/* If the array is empty, show the Add button */}
-          {currentValue.length < 1 && (
-            <Button onClick={() => handleAdd(push)}>
-              <AddOutlined color="primary" />
-            </Button>
-          )}
-
-          {/* Render input fields when there are values in the array */}
-          {currentValue.map((object, index) => (
-            <div
-              key={`${item.key}.${index}`}
-              style={{ display: "flex", flexDirection: "column"}}
-            >
-              <div key={`${item.key}.${index}`} style={{ display: "flex", flexDirection: "column" }}>
-                {/* Display label for each field */}
-                <InputLabel htmlFor={`${item.key}.${index}`}>{`${item.title} ${
-                  index + 1
-                }`}</InputLabel>
-
-                {/* Input field and buttons for removing and adding */}
-                <div style={{ display: "flex", flexDirection: "row" }} key={index}>
-                  <TextField
-                    name={`${item.key}.${index}`} // Field name with index
-                    onChange={(e) => handleChange(e, index)} // Custom handleChange for updating the field
-                    value={object} // Value from the current array
-                    key={`${item.key}.${index}`} // Set unique ID
-                    placeholder="Enter value"
-                  />
-
-                  {/* Button to remove the current field */}
-                  <Button onClick={() => handleRemove(remove, index)}>
-                    <DeleteOutlined color="error" fontSize="small" />
-                  </Button>
-                </div>
-                {/* Add button on the last item */}
-                {index === currentValue.length - 1 && (
-                  <Button onClick={() => handleAdd(push)}>
-                    <AddOutlined color="primary" />
-                  </Button>
-                )}
-              </div>
-            </div>
-          ))}
-        </>
-      )}
-    />
+    <div style={{ display: "flex", flexDirection: "column", gap: "10px", alignItems: "center" }}>
+      <h3>{item.title}</h3>
+      {skills.map((object, index) => (
+        <div key={index} style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <TextField
+            name={`${item.key}.${index}`} // Field name with index
+            onChange={(e) => handleFieldChange(index, e.target.value)} // Custom handleChange for updating the field
+            value={object} // Value from the current array
+            key={`${item.key}.${index}`} // Set unique ID
+            placeholder="Enter value"
+            variant="outlined"
+          />
+          <button type="button" onClick={() => handleRemoveField(index)}>
+            <DeleteOutlined color="error" />
+          </button>
+        </div>
+      ))}
+      <button type="button" onClick={handleAddField}>
+        <AddOutlined color="primary" />
+      </button>
+    </div>
   );
 };
 

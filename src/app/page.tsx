@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import dynamic from 'next/dynamic';
 import Image from "next/image";
-const MyStepper = dynamic(() => import('./components/stepper/stepper'), {
+const MyStepper = dynamic(() => import('./stepper/stepper'), {
   ssr: false,
 });
 export default function Home() {

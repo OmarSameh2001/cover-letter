@@ -1,14 +1,18 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Stepper, Step } from "react-form-stepper";
-import Personal from "../stepperPages/personal/personal";
-import Company from "../stepperPages/company/company";
-import Education from "../stepperPages/education/education";
+import Personal from "../components/stepperPages/personal/personal";
+import Company from "../components/stepperPages/company/company";
+import Education from "../components/stepperPages/education/education";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import Experience from "../stepperPages/experience/experience";
-import Skills from "../stepperPages/skills/skills";
+import Experience from "../components/stepperPages/experience/experience";
+import Skills from "../components/stepperPages/skills/skills";
+import CustomFieldArray from "@/app/addons/fieldArray/fieldArray";
+import { useRouter } from 'next/navigation';
+
 
 const MyStepper = () => {
+  const router = useRouter();
   const [step, setStep] = useState(0);
   const [isLocal, setIsLocal] = useState(false);
   const [isRetrived, setIsRetrived] = useState(false);
@@ -17,6 +21,7 @@ const MyStepper = () => {
       name: "",
       email: "",
       phone: "",
+      yoe : "",
     },
     company: {
       name: "",
@@ -49,22 +54,24 @@ const MyStepper = () => {
   };
 
   const handleRetrive = () => {
-    setFormData(JSON.parse(localStorage.getItem("userObject") || "{}"));
+    const storedData = localStorage.getItem("userObject");
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      setFormData(parsedData); // Set formData to the retrieved data
+    }
     setIsRetrived(true);
   };
 
   const handleDelete = () => {
-    const del = confirm("Are you sure you want to delete your data?");
-    if (del) {
+    if (confirm("Are you sure you want to delete your data?")) {
       localStorage.removeItem("userObject");
-      setStep(0);
-      setIsRetrived(false);
-      setIsLocal(false);
       setFormData({
+        // Reset formData to initial state
         personal: {
           name: "",
           email: "",
           phone: "",
+          yoe : "",
         },
         company: {
           name: "",
@@ -87,6 +94,9 @@ const MyStepper = () => {
           },
         ],
       });
+      setStep(0); // Reset step to the first step
+      setIsRetrived(false);
+      setIsLocal(false);
     }
   };
 
@@ -95,8 +105,8 @@ const MyStepper = () => {
   ) => {
     const { name, value } = e.target;
 
-    // Check if the input belongs to the personal section
-    if (["name", "email", "phone"].includes(name)) {
+    // Determine which part of the form to update
+    if (["name", "email", "phone", "yoe"].includes(name)) {
       setFormData((prevData) => ({
         ...prevData,
         personal: {
@@ -104,19 +114,25 @@ const MyStepper = () => {
           [name]: value,
         },
       }));
-    }
-    // Check if the input belongs to the company section
-    else if (["companyName", "hr", "position", "field"].includes(name)) {
-      setFormData((prevData) => ({
-        ...prevData,
-        company: {
-          ...prevData.company,
-          [name]: value,
-        },
-      }));
-    }
-    // Check if the input belongs to the education section
-    else if (["university", "degree", "year"].includes(name)) {
+    } else if (["cname", "hr", "position", "field"].includes(name)) {
+      if (name === "cname") {
+        setFormData((prevData) => ({
+          ...prevData,
+          company: {
+            ...prevData.company,
+            name: value,
+          },
+        }));
+      } else {
+        setFormData((prevData) => ({
+          ...prevData,
+          company: {
+            ...prevData.company,
+            [name]: value,
+          },
+        }));
+      }
+    } else if (["university", "degree", "year"].includes(name)) {
       setFormData((prevData) => ({
         ...prevData,
         education: {
@@ -124,24 +140,14 @@ const MyStepper = () => {
           [name]: value,
         },
       }));
-    }
-    // Check if the input belongs to the skills section (for example, if using a multi-select)
-    else if (name === "skills") {
-      const skillsArray = value.split(",").map((skill) => skill.trim()); // Example for handling multiple skills
-      setFormData((prevData) => ({
-        ...prevData,
-        skills: skillsArray,
-      }));
-    }
-    // Check if the input belongs to the experiences section (this will require additional handling)
-    else if (name.startsWith("experience")) {
-      const index = parseInt(name.split("-")[1]); // Extract the index from the name, e.g., "experience-0"
-      const field = name.split("-")[2]; // Extract the field name, e.g., "company"
+    } else if (name.startsWith("experience")) {
+      const [_, index, field] = name.split("-");
+      const idx = parseInt(index); // Extract index from name
 
       setFormData((prevData) => {
         const experiences = [...prevData.experiences];
-        experiences[index] = {
-          ...experiences[index],
+        experiences[idx] = {
+          ...experiences[idx],
           [field]: value,
         };
         return {
@@ -150,21 +156,34 @@ const MyStepper = () => {
         };
       });
     }
-    console.log(formData);
+  };
+
+  const handleSkills = (skills: string[]) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      skills,
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission
     localStorage.setItem("userObject", JSON.stringify(formData));
     console.log("Form Submitted", formData);
+    router.push("/coverLetter");
+    // Optionally, navigate or show a success message here
   };
 
   useEffect(() => {
     const userObject = localStorage.getItem("userObject");
     if (userObject) {
       setIsLocal(true);
+      setFormData(JSON.parse(userObject)); // Load existing data into formData
     }
   }, []);
+
+  useEffect(() => {
+    console.log(formData);
+  }, [formData]);
 
   return (
     <div style={{ padding: "20px" }}>
@@ -174,8 +193,8 @@ const MyStepper = () => {
           <Step label="Personal Information" />
           <Step label="Company Information" />
           <Step label="Education Information" />
-          <Step label="Skills Information" />
           <Step label="Experience Information" />
+          <Step label="Skills Information" />
         </Stepper>
       </div>
 
@@ -209,7 +228,7 @@ const MyStepper = () => {
           </a>
         </div>
 
-        <form
+        <div
           style={{
             display: "flex",
             flexDirection: "column",
@@ -217,23 +236,14 @@ const MyStepper = () => {
           }}
         >
           {step === 0 && (
-            <div>
-              <Personal handleChange={handleChange} formData={formData} />
-            </div>
+            <Personal handleChange={handleChange} formData={formData} />
           )}
-
           {step === 1 && (
-            <div>
-              <Company handleChange={handleChange} formData={formData} />
-            </div>
+            <Company handleChange={handleChange} formData={formData} />
           )}
-
           {step === 2 && (
-            <div>
-              <Education handleChange={handleChange} formData={formData} />
-            </div>
+            <Education handleChange={handleChange} formData={formData} />
           )}
-
           {step === 3 && (
             <Experience
               handleChange={handleChange}
@@ -241,9 +251,12 @@ const MyStepper = () => {
               experienceIndex={0}
             />
           )}
-
           {step === 4 && (
-            <Skills handleChange={handleChange} formData={formData} />
+            <CustomFieldArray
+              item={{ key: "skills", title: "Skills" }}
+              values={formData.skills}
+              handleChange={handleSkills} // Handle changes from skills input
+            />
           )}
           <div className="next-button mt-3">
             {step < 4 ? (
@@ -255,12 +268,14 @@ const MyStepper = () => {
                 Next
               </button>
             ) : (
-              <button className="btn btn-success" onClick={handleSubmit}>
+              <button onClick={handleSubmit} className="btn btn-success">
+                {" "}
+                {/* Submit button */}
                 Submit
               </button>
             )}
           </div>
-        </form>
+        </div>
         <div
           style={{
             position: "absolute",
@@ -278,7 +293,7 @@ const MyStepper = () => {
           )}
           {isLocal && !isRetrived && (
             <button onClick={handleRetrive} className="btn btn-success">
-              Retrive Saved Data
+              Retrieve Saved Data
             </button>
           )}
         </div>

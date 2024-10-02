@@ -16,6 +16,7 @@ interface CompanyProps {
 function Company ({ handleChange, formData }: CompanyProps) {
   return (
     <div>
+      <h3 style={{ textAlign: "center" }}>New Company's Info.</h3>
       <label>
         Company Name:
         <Input
