@@ -6,7 +6,6 @@ import Company from "../components/stepperPages/company/company";
 import Education from "../components/stepperPages/education/education";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import Experience from "../components/stepperPages/experience/experience";
-import Skills from "../components/stepperPages/skills/skills";
 import CustomFieldArray from "@/app/addons/fieldArray/fieldArray";
 import { useRouter } from 'next/navigation';
 
@@ -142,6 +141,7 @@ const MyStepper = () => {
       }));
     } else if (name.startsWith("experience")) {
       const [_, index, field] = name.split("-");
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const idx = parseInt(index); // Extract index from name
 
       setFormData((prevData) => {
