@@ -73,14 +73,14 @@ function CoverLetter() {
   }, []); // Ensure the effect only runs once
 
   return (
-    <div>
+    <div style={{maxHeight: "100vh"}}>
       <Image
         src="/static/cover1.jpg"
         alt="cover letter"
         style={{
           width: "100vw",
           height: "100vh",
-          objectFit: "cover",
+          objectFit: "none",
           zIndex: -999,
           position: "absolute",
           opacity: 0.2,

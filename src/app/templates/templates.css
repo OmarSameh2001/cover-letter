@@ -1,0 +1,9 @@
+.slick-prev:before,
+.slick-next:before {
+  color: darkblue;
+}
+.slick-active {
+  border: 2px solid rgb(4, 4, 41);
+  padding: 5px;
+  border-radius: 10px;
+}
