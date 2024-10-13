@@ -18,7 +18,7 @@ function Experience ({ handleChange, formData, experienceIndex }: ExperienceProp
   const experience = formData.experiences[experienceIndex];
 
   return (
-    <div>
+    <div style={{ display: "flex", flexDirection: "column"}}>
       <h3 style={{ textAlign: "center" }}>Experience</h3>
       <label>
         Company:

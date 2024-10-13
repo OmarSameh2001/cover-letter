@@ -15,7 +15,7 @@ interface PersonalProps {
 
 function Personal({ handleChange, formData }: PersonalProps) {
   return (
-    <div>
+    <div style={{ display: "flex", flexDirection: "column"}}>
       <h3 style={{ textAlign: "center" }}>Personal Info.</h3>
       <label>
         Name:
@@ -49,6 +49,7 @@ function Personal({ handleChange, formData }: PersonalProps) {
           required
         />
       </label>
+      <br />
       <label>
         Years of Experience:
         <Input
